@@ -10,13 +10,18 @@ mydb = mysql.connector.connect(
 
 db_cursor = mydb.cursor()
 
-def execute_query(query, values=None, commit=False):
+def execute_post_query(query, values=None):
       try:
             db_cursor.execute(query, values)
-            if commit:
-                  mydb.commit()
-            else:
-                  db_cursor.fetchall()
+            mydb.commit()
       except mysql.connector.Error as e:
             print("Error executing query:", e)
+            raise
+
+def execute_get_query(query, values=None):
+      try:
+            db_cursor.execute(query, values)
+            return db_cursor.fetchall()
+      except mysql.connector.Error as e:
+            print("Error executing GET query:", e)
             raise

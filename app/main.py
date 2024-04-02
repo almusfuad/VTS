@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from routes import user_router
+from routes import user_router, movie_router
 
 
 app = FastAPI()
 
 app.include_router(user_router)
+app.include_router(movie_router)
 
 if __name__ == "__main__":
       import uvicorn

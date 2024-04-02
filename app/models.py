@@ -15,6 +15,7 @@ class LoginInput(BaseModel):
 class Movie(BaseModel):
       name: str
       genre: str
+      rating: str
       release_date: date
 
 class Rating(BaseModel):
