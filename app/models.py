@@ -8,6 +8,10 @@ class User(BaseModel):
       email: str
       password: str
       
+class LoginInput(BaseModel):
+      email: str
+      password: str
+      
 class Movie(BaseModel):
       name: str
       genre: str

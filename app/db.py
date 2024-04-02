@@ -10,8 +10,17 @@ mydb = mysql.connector.connect(
 
 db_cursor = mydb.cursor()
 
-
-def execute_query(query, values = None):
-      db_cursor.execute(query, values)
-      mydb.commit()
-      return db_cursor.fetchall()
+def execute_query(query, values=None, commit=False):
+      try:
+            db_cursor.execute(query, values)
+            if commit:
+                  mydb.commit()
+            if db_cursor.rowcount > 0: 
+                  result = db_cursor.fetchall()
+                  print("Result set:", result)
+                  return result
+            else:
+                  return None
+      except Error as e:
+            print("Error executing query:", e)
+            raise
