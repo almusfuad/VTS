@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from db import execute_query
 from auth import get_password_hash, verify_password
 from models import User, LoginInput
+import mysql.connector
 
 user_router = APIRouter()
 
@@ -18,7 +19,7 @@ def register_user(user: User):
       try:
             execute_query(query, (user.name, user.phone, user.email, hashed_password), True)
             return {'message': "User registered successfully"}
-      except Exception as e:
+      except mysql.connector.Error as e:
             raise HTTPException(status_code=500, detail=f"Failed to register user: {str(e)}")
       
 
