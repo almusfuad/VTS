@@ -97,3 +97,43 @@ def get_movies():
             raise HTTPException(status_code=500, detail=f"Failed to get movies: {str(e)}")
       
 
+@movie_router.post("/rating/")
+def add_rating(rating: Rating):
+      try:
+            query = """
+                  INSERT INTO movie_rating.ratings (user_id, movie_id, rating)
+                  VALUES (%s, %s, %s)
+            """
+            
+            execute_post_query(query, (rating.user_id, rating.movie_id, rating.rating))
+            return {"message": "Rating added successfully"}
+      except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to add rating: {str(e)}")
+      
+
+
+@movie_router.get("/rating/")
+def all_rating(rating: Rating):
+      try:
+            query = '''
+                  SELECT * FROM movie_rating.ratings
+            '''
+            result = execute_get_query(query)
+            
+            ratings = []
+            for row in result:
+                  rating = {
+                        'id': row[0],
+                        'user_id': row[1],
+                        'movie_id': row[2],
+                        'rating': row[3]
+                  }
+                  
+                  ratings.append(rating)
+                  
+            return ratings
+      
+      except Exception as e:
+            return HTTPException(status_code=500, detail=f"Failed to get ratings: {str(e)}")
+      
+      
