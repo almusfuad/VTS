@@ -76,7 +76,12 @@ def add_movie(movie: Movie):
 @movie_router.get("/movie/", tags=["Movie"])
 def get_movies():
       try:
-            query = "SELECT * FROM movie_rating.movies"
+            query = """
+                  SELECT m.id, m.name, m.genre, AVG(r.rating) as average_rating, m.release_date 
+                  FROM movie_rating.movies m
+                  JOIN movie_rating.ratings r ON m.id = r.movie_id
+                  GROUP BY m.id, m.name, m.genre, m.release_date
+            """
             result = execute_get_query(query)
             
             movies = []
@@ -99,11 +104,16 @@ def get_movies():
       
 
 
+
 @movie_router.get("/movie/{movie_name}", tags=["Movie"])
 def search_movie(movie_name: str = Path(..., title = "Movie Name", description="Name of the movie to search for")):
       try:
             query = """ 
-                  SELECT * FROM movie_rating.movies WHERE name LIKE %s
+                  SELECT m.id, m.name, m.genre, AVG(r.rating) as average_rating, m.release_date 
+                  FROM movie_rating.movies m
+                  JOIN movie_rating.ratings r ON m.id = r.movie_id
+                  WHERE m.name LIKE %s
+                  GROUP BY m.id, m.name, m.genre, m.release_date
             """ 
             
             result = execute_get_query(query, (f"%{movie_name}%", ))  # added % to enable partial match
@@ -117,7 +127,7 @@ def search_movie(movie_name: str = Path(..., title = "Movie Name", description="
                         "id": row[0],
                         "name": row[1],
                         "genre": row[2],
-                        "rating": row[3],
+                        "average_rating": row[3],
                         "release_date": row[4].strftime("%d-%m-%Y")
                   }
                   
