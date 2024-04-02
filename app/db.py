@@ -13,5 +13,5 @@ db_cursor = mydb.cursor()
 
 def execute_query(query, values = None):
       db_cursor.execute(query, values)
-      db_connection.commit()
+      mydb.commit()
       return db_cursor.fetchall()
