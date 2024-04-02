@@ -145,7 +145,7 @@ def add_rating(rating: Rating):
 
 
 @movie_router.get("/rating/", tags=["Rating"])
-def all_rating(rating: Rating):
+def all_rating():
       try:
             query = '''
                   SELECT * FROM movie_rating.ratings
@@ -160,7 +160,6 @@ def all_rating(rating: Rating):
                         'movie_id': row[2],
                         'rating': row[3]
                   }
-                  
                   ratings.append(rating)
                   
             return ratings
